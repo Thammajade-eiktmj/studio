@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { User } from "./entities/user.entity";
+import { User } from "../entities/user.entity";
 import { UserResponseDto } from "./dto/user-response.dto";
 
 @Injectable()
@@ -12,7 +12,13 @@ export class UserService {
   ) {}
 
   async findAll(): Promise<User[]> {
-    return this.userRepository.find();
+    const user = this.userRepository.find({
+      where: {
+        deletedAt: null,
+      },
+    });
+
+    return user;
   }
 
   async findOne(id: string): Promise<UserResponseDto> {
