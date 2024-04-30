@@ -2,8 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, BadRequest
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { v4 as uuidv4 } from "uuid";
-import { NOTFOUND } from "dns";
+import { validate as uuidv4Validate } from "uuid";
 
 @Controller("user")
 export class UserController {
@@ -22,14 +21,10 @@ export class UserController {
 
   @Get(":id")
   findOne(@Param("id") id: string) {
-    if (!uuidv4.validate(id)) {
-      throw new BadRequestException("invalid uuid");
-    }
+    if (!uuidv4Validate(id)) throw new BadRequestException("invalid uuid");
 
     const user = this.userService.findOne(id);
-    if (!user) {
-      throw new NotFoundException("user does not exist");
-    }
+    if (!user) throw new NotFoundException("user does not exist");
 
     return user;
   }
@@ -40,7 +35,13 @@ export class UserController {
   }
 
   @Delete(":id")
+  @HttpCode(204)
   remove(@Param("id") id: string) {
-    return this.userService.delete(id);
+    if (!uuidv4Validate(id)) throw new BadRequestException("invalid uuid");
+
+    const user = this.userService.delete(id);
+    if (!user) throw new NotFoundException("user does not exist");
+
+    return user;
   }
 }
