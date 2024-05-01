@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, DeleteDateColumn, ManyToOne } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, DeleteDateColumn, ManyToOne, JoinColumn } from "typeorm";
 import { Studio } from "./studio.entity";
 import { Anime } from "./anime.entity";
 
@@ -19,10 +19,12 @@ export class Chapter {
   @Column()
   duration: number;
 
-  @ManyToOne(() => Studio, studio => studio.chapters)
+  @JoinColumn({ name: "studioId" })
+  @ManyToOne(() => Studio, studio => studio.chapters, { onDelete: "SET NULL" })
   studio: Studio;
 
-  @ManyToOne(() => Anime, anime => anime.chapters)
+  @JoinColumn({ name: "animeId" })
+  @ManyToOne(() => Anime, anime => anime.chapters, { onDelete: "SET NULL" })
   anime: Anime;
 
   @Column({ nullable: true })

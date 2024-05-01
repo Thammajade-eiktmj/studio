@@ -1,16 +1,13 @@
 import { IsNotEmpty, IsNumber, IsString, IsUUID, Max, Min } from "class-validator";
 
-export class CreateChapterDto {
+export class CreateAnimeDto {
   @IsNotEmpty()
   name: string;
 
-  @Min(0)
-  @Max(24)
-  duration: number;
+  @Min(1)
+  @Max(9999)
+  year: number;
 
   @IsUUID()
   studioId: string;
-
-  @IsUUID()
-  animeId: string;
 }

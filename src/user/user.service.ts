@@ -12,23 +12,16 @@ export class UserService {
   ) {}
 
   async findAll(): Promise<User[]> {
-    const user = this.userRepository.find({
-      where: {
-        deletedAt: null,
-      },
-    });
-
-    return user;
+    return this.userRepository.find();
   }
 
   async findOne(id: string): Promise<UserResponseDto> {
-    const user = await this.userRepository.findOne({ where: { id } });
-    return new UserResponseDto(user);
+    return await this.userRepository.findOneBy({ id });
   }
 
-  async create(user: Partial<User>): Promise<User> {
-    const newuser = this.userRepository.create(user);
-    return this.userRepository.save(newuser);
+  async create(createUser: Partial<User>): Promise<string> {
+    const user = this.userRepository.create(createUser);
+    return (await this.userRepository.save(user)).id;
   }
 
   async update(id: string, user: Partial<User>): Promise<User> {
@@ -37,6 +30,6 @@ export class UserService {
   }
 
   async delete(id: string): Promise<void> {
-    await this.userRepository.createQueryBuilder().softDelete().where("id = :id", { id: id }).execute();
+    await this.userRepository.softDelete(id);
   }
 }

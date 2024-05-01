@@ -2,6 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Studio } from "../entities/studio.entity";
+import { CreateStudioDto } from "./dto/create-studio.dto";
+import { UpdateStudioDto } from "./dto/update-studio.dto";
 
 @Injectable()
 export class StudioService {
@@ -11,31 +13,23 @@ export class StudioService {
   ) {}
 
   async findAll(): Promise<Studio[]> {
-    const studio = this.studioRepository.find({
-      where: {
-        deletedAt: null,
-      },
-    });
-
-    return studio;
+    return this.studioRepository.find();
   }
 
   async findOne(id: string): Promise<Studio> {
-    const studio = await this.studioRepository.findOne({ where: { id } });
-    return studio;
+    return await this.studioRepository.findOneBy({ id });
   }
 
-  async create(studio: Partial<Studio>): Promise<Studio> {
-    const newstudio = this.studioRepository.create(studio);
-    return this.studioRepository.save(newstudio);
+  async create(createStudio: CreateStudioDto): Promise<string> {
+    const studio = this.studioRepository.create(createStudio);
+    return (await this.studioRepository.save(studio)).id;
   }
 
-  async update(id: string, studio: Partial<Studio>): Promise<Studio> {
-    await this.studioRepository.update(id, studio);
-    return this.studioRepository.findOne({ where: { id } });
+  async update(id: string, updateStudio: UpdateStudioDto) {
+    return this.studioRepository.update(id, updateStudio);
   }
 
   async delete(id: string): Promise<void> {
-    await this.studioRepository.createQueryBuilder().softDelete().where("id = :id", { id: id }).execute();
+    await this.studioRepository.delete(id);
   }
 }

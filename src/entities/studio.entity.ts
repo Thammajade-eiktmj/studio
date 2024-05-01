@@ -13,10 +13,10 @@ export class Studio {
   @Column()
   website: string;
 
-  @OneToMany(() => Anime, anime => anime.studioId)
+  @OneToMany(() => Anime, anime => anime.studio)
   animes: Anime[];
 
-  @OneToMany(() => Chapter, chapter => chapter.studioId)
+  @OneToMany(() => Chapter, chapter => chapter.studio)
   chapters: Chapter[];
 
   @Column({ nullable: true })

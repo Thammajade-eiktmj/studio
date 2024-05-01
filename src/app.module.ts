@@ -6,6 +6,7 @@ import { ConfigModule } from "@nestjs/config";
 import { UserModule } from "./user/user.module";
 import { ChapterModule } from "./chapter/chapter.module";
 import { StudioModule } from "./studio/studio.module";
+import { AnimeModule } from "./anime/anime.module";
 
 @Module({
   imports: [
@@ -20,9 +21,10 @@ import { StudioModule } from "./studio/studio.module";
       entities: [__dirname + "/**/*.entity{.ts,.js}"],
       synchronize: true,
     }),
-    UserModule,
+    AnimeModule,
     ChapterModule,
     StudioModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
